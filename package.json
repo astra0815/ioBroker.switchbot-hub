@@ -56,6 +56,9 @@
     "lint": "eslint",
     "release": "release-script"
   },
+  "resolutions": {
+    "canvas": "^2.11.2"
+  },
   "bugs": {
     "url": "https://github.com/DrozmotiX/ioBroker.switchbot-hub/issues"
   },
