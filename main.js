@@ -320,7 +320,6 @@ class SwitchbotHub extends utils.Adapter {
 						case ('Smart Lock'):
 						case ('Smart Lock Ultra'):
 							await this.stateSetCreate(`${deviceArray[device].deviceId}.lock`, `lock`, null);
-							await this.stateSetCreate(`${deviceArray[device].deviceId}.unlock`, `unlock`, null);
 							break;
 
 					}
@@ -633,9 +632,6 @@ class SwitchbotHub extends utils.Adapter {
 						case ('Smart Lock Ultra'):
 							if (deviceArray[3] === 'lock') {
 								apiData.command = `lock`;
-								apiData.parameter = `default`;
-							} else if (deviceArray[3] === 'unlock') {
-								apiData.command = `unlock`;
 								apiData.parameter = `default`;
 							}
 							break;
