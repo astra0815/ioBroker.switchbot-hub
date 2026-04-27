@@ -27,6 +27,8 @@ const intervallSettings = {
 	Meter: 7 * 60000,
 	Plug: 30 * 60000,
 	SmartFan: 30 * 60000,
+	SmartLock: 30 * 60000,
+	SmartLockUltra: 30 * 60000,
 };
 
 class SwitchbotHub extends utils.Adapter {
@@ -68,6 +70,8 @@ class SwitchbotHub extends utils.Adapter {
 		intervallSettings.Meter = this.config.intervallMeter != null ? this.config.intervallMeter * 60000 || intervallSettings.Meter : intervallSettings.Meter;
 		intervallSettings.Plug = this.config.intervallPlug != null ? this.config.intervallPlug * 60000 || intervallSettings.Plug : intervallSettings.Plug;
 		intervallSettings.SmartFan = this.config.intervallSmartFan != null ? this.config.intervallSmartFan * 60000 || intervallSettings.SmartFan : intervallSettings.SmartFan;
+		intervallSettings.SmartLock = this.config.intervallSmartLock != null ? this.config.intervallSmartLock * 60000 || intervallSettings.SmartLock : intervallSettings.SmartLock;
+		intervallSettings.SmartLockUltra = this.config.intervallSmartLockUltra != null ? this.config.intervallSmartLockUltra * 60000 || intervallSettings.SmartLockUltra : intervallSettings.SmartLockUltra;
 
 		// Request devices, create related objects and get all values
 		try {
@@ -142,6 +146,12 @@ class SwitchbotHub extends utils.Adapter {
 					break;
 				case ('Smart Fan'):
 					timeInMs = intervallSettings.SmartFan;
+					break;
+				case ('Smart Lock'):
+					timeInMs = intervallSettings.SmartLock;
+					break;
+				case ('Smart Lock Ultra'):
+					timeInMs = intervallSettings.SmartLockUltra;
 					break;
 			}
 			this.devices[deviceId].intervallTimer = timeInMs;
@@ -305,6 +315,12 @@ class SwitchbotHub extends utils.Adapter {
 						case ('Bot'):
 							await this.stateSetCreate(`${deviceArray[device].deviceId}.press`, `press`, null);
 							await this.stateSetCreate(`${deviceArray[device].deviceId}.state`, `ON/OFF`, null);
+							break;
+
+						case ('Smart Lock'):
+						case ('Smart Lock Ultra'):
+							await this.stateSetCreate(`${deviceArray[device].deviceId}.lock`, `lock`, null);
+							await this.stateSetCreate(`${deviceArray[device].deviceId}.unlock`, `unlock`, null);
 							break;
 
 					}
@@ -611,6 +627,17 @@ class SwitchbotHub extends utils.Adapter {
 
 						case ('Smart Fan'):
 							//ToDo: add proper definitions and values
+							break;
+
+						case ('Smart Lock'):
+						case ('Smart Lock Ultra'):
+							if (deviceArray[3] === 'lock') {
+								apiData.command = `lock`;
+								apiData.parameter = `default`;
+							} else if (deviceArray[3] === 'unlock') {
+								apiData.command = `unlock`;
+								apiData.parameter = `default`;
+							}
 							break;
 
 						default:
