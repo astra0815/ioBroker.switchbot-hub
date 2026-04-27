@@ -109,6 +109,9 @@ class SwitchbotHub extends utils.Adapter {
 				await this.loadDevices();
 			}
 
+			// Reschedule next refresh (setTimeout feuert nur einmal, daher erneut aufrufen)
+			await this.dataRefresh(deviceId);
+
 		}, (intervallTimer));
 	}
 
@@ -208,13 +211,14 @@ class SwitchbotHub extends utils.Adapter {
 		if (!data) {
 			return new Promise((resolve, reject) => {
 				const req = https.request(options, res => {
-					let dataArray;
+					const chunks = [];
 
 					res.on('data', d => {
-						dataArray = d;
+						chunks.push(d);
 					});
 
 					res.on('end', () => {
+						const dataArray = Buffer.concat(chunks);
 						const out = new TextDecoder().decode(new Uint8Array(dataArray));
 						try {
 							resolve(JSON.parse(out));
@@ -231,13 +235,14 @@ class SwitchbotHub extends utils.Adapter {
 		} else {
 			return new Promise((resolve, reject) => {
 				const req = https.request(options, res => {
-					let dataArray;
+					const chunks = [];
 
 					res.on('data', d => {
-						dataArray = d;
+						chunks.push(d);
 					});
 
 					res.on('end', () => {
+						const dataArray = Buffer.concat(chunks);
 						const out = new TextDecoder().decode(new Uint8Array(dataArray));
 						try {
 							resolve(JSON.parse(out));

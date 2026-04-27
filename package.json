@@ -56,7 +56,7 @@
     "lint": "eslint",
     "release": "release-script"
   },
-  "resolutions": {
+  "overrides": {
     "canvas": "^2.11.2"
   },
   "bugs": {
